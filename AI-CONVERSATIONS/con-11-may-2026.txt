@@ -1,0 +1,123 @@
+AI Conversation Log — Claude (claude.ai)
+Date: 11 May 2026
+Tool: Claude Sonnet (claude.ai)
+Project: Budget Buddy — Smart Finance Assistant (ISYS2001)
+
+================================================
+
+I said:
+I need to build a RAG system for my finance assistant. What is RAG and how do I implement a simple version?
+
+Claude said:
+RAG stands for Retrieval-Augmented Generation. The idea is: before the AI generates a response, it first retrieves relevant information from a knowledge source and includes that context in the prompt. This makes responses more accurate and grounded in your specific data.
+
+For a simple implementation without embeddings or vector databases, you can use keyword matching against a knowledge base dictionary:
+
+financial_knowledge_base = {
+    "budgeting": "A good budgeting strategy is to compare total spending against a weekly or monthly limit and review categories that exceed expectations.",
+    "refunds": "Refunds should be separated from normal spending because they reduce net spending but do not represent new purchases.",
+    "discretionary spending": "Discretionary spending includes flexible categories such as entertainment, coffee, shopping, and dining.",
+    "savings": "Savings recommendations should be realistic, specific, and linked to the user's actual spending pattern."
+}
+
+def retrieve_financial_guidance(user_question):
+    question = user_question.lower()
+    matched = []
+    for topic, guidance in financial_knowledge_base.items():
+        if topic in question:
+            matched.append(guidance)
+    if not matched:
+        matched.append("General guidance: review total spending, refunds, highest categories, and budget status.")
+    return matched
+
+This is a basic keyword-matching RAG. For a more advanced version, you'd use embeddings and cosine similarity, but this works well for a student project.
+
+================================================
+
+I said:
+The keyword matching is too rigid. If someone types "entertainment costs" it won't match "discretionary spending". How do I make it more flexible?
+
+Claude said:
+Good observation. Add a synonym/related terms mapping:
+
+# Map of user keywords to knowledge base topics
+keyword_to_topic = {
+    "entertainment": "discretionary spending",
+    "coffee": "discretionary spending",
+    "dining": "discretionary spending",
+    "eating out": "discretionary spending",
+    "shopping": "discretionary spending",
+    "budget": "budgeting",
+    "overspending": "budgeting",
+    "over budget": "budgeting",
+    "refund": "refunds",
+    "return": "refunds",
+    "save": "savings",
+    "saving": "savings",
+    "goal": "savings"
+}
+
+def retrieve_financial_guidance(user_question):
+    question = user_question.lower()
+    matched_topics = set()
+    
+    # Check direct topic matches
+    for topic in financial_knowledge_base:
+        if topic in question:
+            matched_topics.add(topic)
+    
+    # Check keyword synonyms
+    for keyword, topic in keyword_to_topic.items():
+        if keyword in question:
+            matched_topics.add(topic)
+    
+    matched_guidance = [financial_knowledge_base[t] for t in matched_topics]
+    
+    if not matched_guidance:
+        matched_guidance.append("General guidance: review total spending, refunds, highest categories, and budget status.")
+    
+    return matched_guidance
+
+Now "entertainment costs" matches the "entertainment" keyword → retrieves "discretionary spending" guidance. Much more natural.
+
+================================================
+
+I said:
+How do I connect the RAG guidance to the AI chat response?
+
+Claude said:
+Pass the retrieved guidance as part of the context in the prompt to get_response():
+
+def answer_with_rag(user_question, analysis_data=None):
+    # Step 1: Retrieve relevant guidance
+    guidance = retrieve_financial_guidance(user_question)
+    guidance_text = "\n".join(f"- {g}" for g in guidance)
+    
+    # Step 2: Build context from analysis if available
+    context = ""
+    if analysis_data and isinstance(analysis_data, dict):
+        total = analysis_data.get('total_positive_spending', 0)
+        net = analysis_data.get('net_spending', 0)
+        context = f"\nUser's spending: Total AUD {total:.2f}, Net AUD {net:.2f}"
+    
+    # Step 3: Build the full prompt with RAG context
+    full_prompt = f"""Relevant financial guidance:
+{guidance_text}
+{context}
+
+User question: {user_question}
+
+Please answer using the guidance above and the user's spending context."""
+    
+    # Step 4: Get AI response
+    try:
+        response = get_response(full_prompt, system=BUDGET_BUDDY_SYSTEM_PROMPT)
+        return response
+    except Exception:
+        return f"Based on financial guidance: {guidance_text}"
+
+This is the standard RAG pattern: retrieve → augment prompt → generate. The fallback at the end shows the raw retrieved guidance if the AI server is unavailable.
+
+================================================
+
+[End of conversation — 11 May 2026]

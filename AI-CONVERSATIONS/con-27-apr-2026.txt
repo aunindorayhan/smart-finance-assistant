@@ -1,0 +1,99 @@
+AI Conversation Log — Claude (claude.ai)
+Date: 27 April 2026
+Tool: Claude Sonnet (claude.ai)
+Project: Budget Buddy — Smart Finance Assistant (ISYS2001)
+
+================================================
+
+I said:
+I'm starting my Smart Finance Assistant project. I need help defining the problem clearly. What finance problems could a CSV-based tool solve for students and young adults?
+
+Claude said:
+Here are five specific, realistic problems a CSV-based finance tool could address for students:
+
+1. **Not knowing where money goes**: Most students have bank exports but the raw list of transactions is hard to interpret. A tool that groups by category and shows totals solves this immediately.
+
+2. **Refunds being counted as spending**: When a refund appears in the CSV as a negative amount, naive totals will undercount spending. Properly separating refunds from real spending gives a more accurate picture.
+
+3. **No comparison to a budget**: Students often have a rough weekly budget in their head but no easy way to compare actual spending against it. A budget comparison with a clear "over/under" result is immediately useful.
+
+4. **Identifying the highest-cost category**: Most people don't realise how much they spend on coffee or entertainment until they see it summed up. Showing the top spending category creates actionable awareness.
+
+5. **Not knowing how long to save for a goal**: "How long until I can afford a new laptop?" is a common question. A simple savings goal calculator answers this in seconds.
+
+For Budget Buddy, I'd focus on problems 1, 2, 3, and 5 — they cover the full journey from raw data to actionable insight.
+
+================================================
+
+I said:
+That's helpful. What inputs and outputs should my assistant have?
+
+Claude said:
+**Inputs:**
+- A CSV transaction file with columns: Date, Amount, Category, Description
+- Amount values may contain messy formats: $45.50, AUD 12.00, -$25.00, spaces
+- A weekly budget amount (optional, entered by user)
+- User questions for the chatbot
+- Savings goal parameters: current savings, monthly contribution, target
+
+**Outputs:**
+- Cleaned transaction table with numeric amounts
+- Total positive spending (before refunds)
+- Total refunds
+- Net spending after refunds
+- Category spending summary (sorted by total, descending)
+- Highest spending category
+- Budget comparison result (over/under/no budget set)
+- Plain-English financial insights and recommendations
+- Chatbot responses to user questions
+- Savings goal timeline
+- Gradio web interface that ties everything together
+
+The clean separation between inputs and outputs helps you design your functions — each function should take the inputs it needs and return the outputs clearly. This is the "Identify Inputs and Outputs" step in the six-step methodology.
+
+================================================
+
+I said:
+Can you give me 3 manual calculation examples for the 'Work the Problem by Hand' step of the methodology?
+
+Claude said:
+**Example 1: Refund handling**
+
+Transactions:
+| Category | Amount |
+|---|---:|
+| Groceries | $45.50 |
+| Transport | $12.00 |
+| Entertainment | $89.95 |
+| Coffee | $3.50 |
+| Refund | -$25.00 |
+
+Positive spending = 45.50 + 12.00 + 89.95 + 3.50 = **$150.95**
+Total refunds = $25.00
+Net spending = 150.95 - 25.00 = **$125.95**
+
+Key insight: the refund reduces the total but should not appear in the category spending summary.
+
+---
+
+**Example 2: Budget comparison**
+
+If weekly budget = $120.00:
+Positive spending = $150.95
+Over budget by = 150.95 - 120.00 = **$30.95**
+
+The assistant should flag this and suggest reviewing the highest discretionary category first.
+
+---
+
+**Example 3: Savings goal**
+
+Current savings = $200, Monthly contribution = $150, Goal = $1,000
+Remaining = 1000 - 200 = $800
+Months needed = 800 / 150 = **5.3 months**
+
+These three examples cover the three main outputs of Budget Buddy and make the logic clear before writing any code.
+
+================================================
+
+[End of conversation — 27 April 2026]

@@ -1,0 +1,124 @@
+AI Conversation Log — Claude (claude.ai)
+Date: 04 May 2026
+Tool: Claude Sonnet (claude.ai)
+Project: Budget Buddy — Smart Finance Assistant (ISYS2001)
+
+================================================
+
+I said:
+I need to build a savings goal calculator as a custom tool for my finance assistant. It should take current savings, monthly contribution, and target amount, and tell the user how many months to reach the goal
+
+Claude said:
+Here's a clean savings goal calculator function:
+
+def savings_goal_calculator(current_savings, monthly_contribution, target_amount):
+    """
+    Calculates how many months are needed to reach a savings target.
+    
+    Args:
+        current_savings: Amount already saved (AUD)
+        monthly_contribution: Amount saved per month (AUD)
+        target_amount: Savings goal (AUD)
+    
+    Returns:
+        str: Human-readable result message
+    """
+    try:
+        current_savings = float(current_savings)
+        monthly_contribution = float(monthly_contribution)
+        target_amount = float(target_amount)
+        
+        if target_amount <= current_savings:
+            return "🎉 You have already reached your savings goal!"
+        
+        if monthly_contribution <= 0:
+            return "❌ Monthly contribution must be greater than zero."
+        
+        remaining = target_amount - current_savings
+        months = remaining / monthly_contribution
+        
+        years = int(months // 12)
+        extra_months = round(months % 12, 1)
+        
+        if years > 0:
+            return f"You need approximately {years} year(s) and {extra_months} month(s) to reach your goal of AUD {target_amount:.2f}."
+        else:
+            return f"You need approximately {months:.1f} months to reach your goal of AUD {target_amount:.2f}."
+    
+    except (ValueError, TypeError):
+        return "❌ Invalid input. Please enter numeric values for all fields."
+
+================================================
+
+I said:
+What about negative inputs? If someone enters -500 for current savings that seems wrong
+
+Claude said:
+Good point. Add validation for negative values:
+
+if current_savings < 0:
+    return "❌ Current savings cannot be negative."
+
+if target_amount <= 0:
+    return "❌ Savings goal must be greater than zero."
+
+Add these after the float() conversions. A negative target doesn't make sense either. Here's where to insert them:
+
+try:
+    current_savings = float(current_savings)
+    monthly_contribution = float(monthly_contribution)
+    target_amount = float(target_amount)
+    
+    # Validation
+    if current_savings < 0:
+        return "❌ Current savings cannot be negative."
+    if target_amount <= 0:
+        return "❌ Savings goal must be greater than zero."
+    if monthly_contribution <= 0:
+        return "❌ Monthly contribution must be greater than zero."
+    
+    # Rest of calculation...
+
+These checks mean the function handles all four invalid cases: negative savings, zero/negative goal, zero/negative contribution, and non-numeric input (caught by the except block).
+
+================================================
+
+I said:
+Can you write a test for the savings calculator that covers all the edge cases?
+
+Claude said:
+def test_savings_calculator():
+    print("🔎 Testing savings goal calculator...\n")
+    
+    # Test 1: Normal case
+    result = savings_goal_calculator(200, 150, 1000)
+    assert "5.3" in result or "months" in result.lower(), "Test 1 failed: normal case"
+    print("✅ Test 1: Normal calculation works.")
+    
+    # Test 2: Goal already reached
+    result = savings_goal_calculator(1500, 100, 1000)
+    assert "already reached" in result.lower(), "Test 2 failed: goal already met"
+    print("✅ Test 2: Already-reached goal detected.")
+    
+    # Test 3: Zero contribution
+    result = savings_goal_calculator(0, 0, 1000)
+    assert "greater than zero" in result.lower(), "Test 3 failed: zero contribution"
+    print("✅ Test 3: Zero contribution rejected.")
+    
+    # Test 4: Negative savings
+    result = savings_goal_calculator(-100, 150, 1000)
+    assert "negative" in result.lower(), "Test 4 failed: negative savings"
+    print("✅ Test 4: Negative savings rejected.")
+    
+    # Test 5: Invalid (text) input
+    result = savings_goal_calculator("abc", 150, 1000)
+    assert "invalid" in result.lower() or "numeric" in result.lower(), "Test 5 failed"
+    print("✅ Test 5: Invalid text input handled.")
+    
+    print("\n🎉 All savings calculator tests passed.")
+
+test_savings_calculator()
+
+================================================
+
+[End of conversation — 04 May 2026]
