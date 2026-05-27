@@ -13,7 +13,7 @@ This diary documents my AI collaboration throughout the development of the Smart
 ### Entry 1 — Defining the Problem and Planning Inputs and Outputs
 
 **Artifact:** Screenshot of Claude conversation where I worked through the project scope and identified inputs and outputs. See AI-CONVERSATIONS/con-27-apr-2026.txt
-
+![Entry 1 - Problem Definition](SCREENSHOTS/entry-1-problem-definition.png)
 **Context:** Before writing any code I wanted to clearly define what problem Budget Buddy would solve and what data it would need as input and output.
 
 **My Prompt:** "I'm starting my Smart Finance Assistant project. What specific finance problems could a CSV-based tool realistically solve for students and young adults? Give me 5 concrete examples."
@@ -31,7 +31,7 @@ This diary documents my AI collaboration throughout the development of the Smart
 ### Entry 2 — Building a Robust Data Cleaning Function
 
 **Artifact:** Before and after versions of the clean_amount_value() function showing the improvement. See AI-CONVERSATIONS/con-24-may-2026.txt
-
+![Entry 2 - Data Cleaning](SCREENSHOTS/entry-2-data-cleaning.png)
 **Context:** My sample CSV had amounts in multiple formats including "$45.50", "AUD 12.00", "-$25.00" and some blank cells. I needed a function that could handle all of these without crashing.
 
 **My Prompt:** "I need a Python function that handles amount formats like '$45.50', 'AUD 12.00', '-$25.00' and empty strings. It should return None for anything invalid instead of raising an error."
@@ -49,7 +49,7 @@ This diary documents my AI collaboration throughout the development of the Smart
 ### Entry 3 — Improving the Category Summary for Business Use
 
 **Artifact:** Code comparison showing the original aggregation and the improved business-friendly version. See AI-CONVERSATIONS/con-24-may-2026.txt
-
+![Entry 3 - Category Summary](SCREENSHOTS/entry-3-category-summary.png)
 **Context:** The initial category groupby code Claude provided used a set for the agg() parameter which caused inconsistent column ordering, and the column names were technical rather than business-friendly.
 
 **AI's First Response:**
@@ -78,7 +78,7 @@ category_summary.columns = ['Category', 'Total Spent', 'Transaction Count', 'Ave
 ### Entry 4 — Finding and Fixing a Critical Edge Case Bug
 
 **Artifact:** Screenshot showing the IndexError and the guard clause fix applied in both affected functions. See AI-CONVERSATIONS/con-24-may-2026.txt
-
+![Entry 4 - IndexError Fix](SCREENSHOTS/entry-4-indexerror-fix.png)
 **Context:** All my tests were passing on normal data but I decided to test what would happen if a user uploaded a CSV where every transaction was a refund. The function crashed with an IndexError.
 
 **My Prompt:** "My function crashes with IndexError: single positional indexer is out-of-bounds on category_summary.iloc[0] when all transactions are refunds. How do I fix this and what other edge cases should I be checking for?"
@@ -94,7 +94,7 @@ category_summary.columns = ['Category', 'Total Spent', 'Transaction Count', 'Ave
 ---
 
 ### Entry 5 — Building a Polished Multi-Tab Gradio Interface
-
+![Entry 5 - Gradio Interface](SCREENSHOTS/entry-5-gradio-interface.png)
 **Artifact:** Screenshot of the three-tab Gradio interface running in Colab with all components connected. See AI-CONVERSATIONS/con-18-may-2026.txt
 
 **Context:** My original Gradio setup was a basic single-tab gr.Interface. It worked but it did not look professional and did not clearly separate the three core features of the assistant.
@@ -114,7 +114,7 @@ category_summary.columns = ['Category', 'Total Spent', 'Transaction Count', 'Ave
 ### Entry 6 — Building a Comprehensive Test Suite
 
 **Artifact:** Screenshot of the full test output showing all foundation and edge case tests passing. See AI-CONVERSATIONS/con-24-may-2026.txt
-
+![Entry 6 - Edge Case Tests](SCREENSHOTS/entry-6-edge-case-tests.png)
 **Context:** I had five basic tests covering normal scenarios but wanted to ensure I was testing the kinds of inputs that would come up in real use, not just the cases I had already thought of.
 
 **My Prompt:** "I have five basic tests for analyze_spending_data(). What edge cases am I probably missing? Write assert-based tests for all-refund data, single transaction datasets, whitespace-only amounts, a savings goal that is already met, and spending exactly equal to the budget."
